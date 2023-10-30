@@ -62,7 +62,17 @@ public class FileSystemService : IFileSystemService
               "LastModified": "2023-09-08T13:10:00Z",
               "FileKilobytes": 120,
               "FileExtension": "jpg"
-          }
+          },
+          {
+            "Id": 6,
+            "ParentId": null,
+            "Type": 0,
+            "Title": "Notes.txt",
+            "Created": "2023-04-05T16:55:00Z",
+            "LastModified": "2023-09-08T13:10:00Z",
+            "FileKilobytes": 120,
+            "FileExtension": "txt"
+        }
         ]
         """;
 }

@@ -16,12 +16,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
-			.UseMauiCompatibility()
-			.ConfigureMauiHandlers(handlers =>
-			{
-				// https://devblogs.microsoft.com/xamarin/introducing-net-maui-compatibility-for-the-xamarin-community-toolkit/
-				handlers.AddCompatibilityRenderers(typeof(Xamarin.CommunityToolkit.UI.Views.MediaElementRenderer).Assembly);
-			})
+			.UsePrism(PrismStartup.Configure)
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -31,10 +26,6 @@ public static class MauiProgram
 				fonts.AddFont("fa-regular-400.ttf", FontConstants.FontAwesomeRegular);
 				fonts.AddFont("fa-solid-900.ttf", FontConstants.FontAwesomeSolid);
 			});
-
-		builder.Services.AddTransient<MainPage>();
-		builder.Services.AddTransient<MainViewModel>();
-		builder.Services.AddTransient<IFileSystemService, FileSystemService>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

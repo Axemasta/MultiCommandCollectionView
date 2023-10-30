@@ -9,7 +9,7 @@
     xmlns:viewmodels="clr-namespace:MultiCommandCollectionView.ViewModels"
     x:Name="Root"
     x:DataType="viewmodels:MainViewModel"
-    Title="MainPage">
+    Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:FileSizeConverter x:Key="FileSizeConverter" />
@@ -21,8 +21,11 @@
     </ContentPage.Resources>
 
     <CollectionView
+        x:Name="MainCollectionView"
         ItemsSource="{Binding Items}"
+        SelectionChanged="OnSelectionChanged"
         SelectionChangedCommand="{Binding PrimaryCommand}"
+        SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}"
         SelectionMode="Single">
         <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="models:FileSystemDisplayItem">
