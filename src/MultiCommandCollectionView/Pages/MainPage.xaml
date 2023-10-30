@@ -9,6 +9,7 @@
     xmlns:viewmodels="clr-namespace:MultiCommandCollectionView.ViewModels"
     x:Name="Root"
     x:DataType="viewmodels:MainViewModel"
+    NavigationPage.BackButtonTitle="Back"
     Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -24,7 +25,7 @@
         x:Name="MainCollectionView"
         ItemsSource="{Binding Items}"
         SelectionChanged="OnSelectionChanged"
-        SelectionChangedCommand="{Binding PrimaryCommand}"
+        SelectionChangedCommand="{Binding ItemSelectedCommand}"
         SelectionChangedCommandParameter="{Binding SelectedItem, Source={RelativeSource Self}}"
         SelectionMode="Single">
         <CollectionView.ItemTemplate>
@@ -87,7 +88,10 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center">
                         <Image.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding SecondaryCommand, Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}}" NumberOfTapsRequired="1" />
+                            <TapGestureRecognizer
+                                Command="{Binding MoreCommand, Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}}"
+                                CommandParameter="{Binding .}"
+                                NumberOfTapsRequired="1" />
                         </Image.GestureRecognizers>
                         <Image.Source>
                             <FontImageSource

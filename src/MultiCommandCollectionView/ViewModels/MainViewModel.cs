@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
@@ -6,10 +7,10 @@ using MultiCommandCollectionView.Abstractions;
 using MultiCommandCollectionView.Enums;
 using MultiCommandCollectionView.Extensions;
 using MultiCommandCollectionView.Models;
+using MultiCommandCollectionView.ObjectModel;
 using MultiCommandCollectionView.Pages;
-using Xamarin.CommunityToolkit.ObjectModel;
-using NavigationMode = Prism.Navigation.NavigationMode;
-using ObservableObject = CommunityToolkit.Mvvm.ComponentModel.ObservableObject;
+using Prism.Navigation;
+using Prism.Services;
 namespace MultiCommandCollectionView.ViewModels;
 
 public partial class MainViewModel : ObservableObject, IInitialize
@@ -50,6 +51,7 @@ public partial class MainViewModel : ObservableObject, IInitialize
 				.ToList();
 			
 			Items.AddRange(childItems);
+			Title = selectedItem.Title;
 		}
 		else
 		{
@@ -67,15 +69,15 @@ public partial class MainViewModel : ObservableObject, IInitialize
 	#region Commands
 
 	[RelayCommand]
-	private async Task Primary(FileSystemDisplayItem? selectedItem)
+	private async Task ItemSelected(FileSystemDisplayItem? selectedItem)
 	{
 		if (selectedItem is null)
 		{
-			logger.LogWarning("PrimaryCommand - Selected item was null");
+			logger.LogWarning("ItemSelectedCommand - Selected item was null");
 			return;
 		}
 		
-		logger.LogInformation("PrimaryCommand executed");
+		logger.LogInformation("ItemSelectedCommand executed");
 		
 		// Drill down
 
@@ -99,9 +101,22 @@ public partial class MainViewModel : ObservableObject, IInitialize
 	}
 
 	[RelayCommand]
-	private void Secondary()
+	private void More(FileSystemDisplayItem? selectedItem)
 	{
-		logger.LogInformation("SecondaryCommand executed");
+		if (selectedItem is null)
+		{
+			logger.LogWarning("MoreCommand - Selected item was null");
+			return;
+		}
+		
+		logger.LogInformation("MoreCommand executed");
+
+		var sheet = new ItemActionMenu()
+		{
+			BindingContext = new ItemActionMenuViewModel(selectedItem)
+		};
+		
+		sheet.ShowAsync();
 	}
 
 	#endregion Commands

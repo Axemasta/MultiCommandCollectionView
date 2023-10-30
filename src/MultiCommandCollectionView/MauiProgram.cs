@@ -7,6 +7,7 @@ using MultiCommandCollectionView.Fonts;
 using MultiCommandCollectionView.Pages;
 using MultiCommandCollectionView.Services;
 using MultiCommandCollectionView.ViewModels;
+using The49.Maui.BottomSheet;
 namespace MultiCommandCollectionView;
 
 public static class MauiProgram
@@ -17,6 +18,7 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UsePrism(PrismStartup.Configure)
+			.UseBottomSheet()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
