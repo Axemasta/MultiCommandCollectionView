@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="MultiCommandCollectionView.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:MultiCommandCollectionView.Converters"
+    xmlns:fonts="clr-namespace:MultiCommandCollectionView.Fonts"
+    xmlns:models="clr-namespace:MultiCommandCollectionView.Models"
+    xmlns:viewmodels="clr-namespace:MultiCommandCollectionView.ViewModels"
+    x:Name="Root"
+    x:DataType="viewmodels:MainViewModel"
+    Title="MainPage">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:FileSizeConverter x:Key="FileSizeConverter" />
+            <converters:FileSizeIsVisibleConverter x:Key="FileSizeIsVisibleConverter" />
+            <converters:FileLastChangedConverter x:Key="FileLastChangedConverter" />
+            <converters:ItemTypeColorConverter x:Key="ItemTypeColorConverter" />
+            <converters:ItemTypeImageSourceConverter x:Key="ItemTypeImageSourceConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <CollectionView
+        ItemsSource="{Binding Items}"
+        SelectionChangedCommand="{Binding PrimaryCommand}"
+        SelectionMode="Single">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="models:FileSystemDisplayItem">
+                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="*,*">
+                    <Ellipse
+                        Grid.RowSpan="2"
+                        Margin="10"
+                        Fill="{Binding ., Converter={StaticResource ItemTypeColorConverter}}"
+                        HeightRequest="40"
+                        VerticalOptions="Center"
+                        WidthRequest="40" />
+
+                    <Image
+                        Grid.RowSpan="2"
+                        HorizontalOptions="Center"
+                        Source="{Binding ., Converter={StaticResource ItemTypeImageSourceConverter}}"
+                        VerticalOptions="Center" />
+
+                    <Label
+                        Grid.Column="1"
+                        Text="{Binding Title}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray900},
+                                                    Dark={StaticResource White}}"
+                        VerticalOptions="End" />
+                    <HorizontalStackLayout
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Spacing="5"
+                        VerticalOptions="Start">
+                        <Label Text="{Binding ., StringFormat='{0:dd MMMM}', Converter={StaticResource FileLastChangedConverter}}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+                        <Label
+                            HorizontalTextAlignment="Center"
+                            IsVisible="{Binding ., Converter={StaticResource FileSizeIsVisibleConverter}}"
+                            Text="."
+                            TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                        Dark={StaticResource Gray300}}"
+                            VerticalTextAlignment="Center" />
+                        <Label
+                            IsVisible="{Binding ., Converter={StaticResource FileSizeIsVisibleConverter}}"
+                            Text="{Binding ., Converter={StaticResource FileSizeConverter}}"
+                            TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                        Dark={StaticResource Gray300}}" />
+                    </HorizontalStackLayout>
+
+                    <Ellipse
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
+                        Margin="10"
+                        Fill="{AppThemeBinding Light={StaticResource White},
+                                               Dark={StaticResource Black}}"
+                        HeightRequest="40"
+                        VerticalOptions="Center"
+                        WidthRequest="40" />
+
+                    <Image
+                        Grid.RowSpan="2"
+                        Grid.Column="2"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding SecondaryCommand, Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}}" NumberOfTapsRequired="1" />
+                        </Image.GestureRecognizers>
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.Ellipsis}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentPage>
