@@ -101,7 +101,7 @@ public partial class MainViewModel : ObservableObject, IInitialize
 	}
 
 	[RelayCommand]
-	private void More(FileSystemDisplayItem? selectedItem)
+	private async Task More(FileSystemDisplayItem? selectedItem)
 	{
 		if (selectedItem is null)
 		{
@@ -111,12 +111,18 @@ public partial class MainViewModel : ObservableObject, IInitialize
 		
 		logger.LogInformation("MoreCommand executed");
 
+		if (selectedItem.Type == ItemType.Folder)
+		{
+			await ItemSelectedCommand.ExecuteAsync(selectedItem);
+			return;
+		}
+
 		var sheet = new ItemActionMenu()
 		{
 			BindingContext = new ItemActionMenuViewModel(selectedItem)
 		};
 		
-		sheet.ShowAsync();
+		await sheet.ShowAsync();
 	}
 
 	#endregion Commands

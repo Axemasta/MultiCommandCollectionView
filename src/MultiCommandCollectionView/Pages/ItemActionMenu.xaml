@@ -4,7 +4,11 @@
     x:Class="MultiCommandCollectionView.Pages.ItemActionMenu"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:MultiCommandCollectionView.Converters"
+    xmlns:fonts="clr-namespace:MultiCommandCollectionView.Fonts"
     xmlns:the49="https://schemas.the49.com/dotnet/2023/maui"
+    xmlns:viewmodels="clr-namespace:MultiCommandCollectionView.ViewModels"
+    x:DataType="viewmodels:ItemActionMenuViewModel"
     CornerRadius="20"
     HasBackdrop="True"
     HasHandle="True">
@@ -13,64 +17,277 @@
         <the49:MediumDetent />
     </the49:BottomSheet.Detents>
 
-    <ScrollView Padding="32">
-        <VerticalStackLayout Spacing="32">
+    <the49:BottomSheet.Resources>
+        <ResourceDictionary>
+            <converters:FileSizeConverter x:Key="FileSizeConverter" />
+            <converters:FileSizeIsVisibleConverter x:Key="FileSizeIsVisibleConverter" />
+            <converters:FileLastChangedConverter x:Key="FileLastChangedConverter" />
+            <converters:ItemTypeColorConverter x:Key="ItemTypeColorConverter" />
+            <converters:ItemTypeImageSourceConverter x:Key="ItemTypeImageSourceConverter" />
+        </ResourceDictionary>
+    </the49:BottomSheet.Resources>
+
+    <Grid Padding="0,16" RowDefinitions="Auto, *">
+
+        <Grid Padding="16,0" Grid.RowDefinitions="Auto, 1">
+            <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="*,*">
+                <Ellipse
+                    Grid.RowSpan="2"
+                    Margin="10"
+                    Fill="{Binding DisplayItem, Converter={StaticResource ItemTypeColorConverter}}"
+                    HeightRequest="40"
+                    VerticalOptions="Center"
+                    WidthRequest="40" />
+
+                <Image
+                    Grid.RowSpan="2"
+                    HorizontalOptions="Center"
+                    Source="{Binding DisplayItem, Converter={StaticResource ItemTypeImageSourceConverter}}"
+                    VerticalOptions="Center" />
+
+                <Label
+                    Grid.Column="1"
+                    Text="{Binding DisplayItem.Title}"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray900},
+                                                Dark={StaticResource White}}"
+                    VerticalOptions="End" />
+                <HorizontalStackLayout
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Spacing="5"
+                    VerticalOptions="Start">
+                    <Label Text="{Binding DisplayItem, StringFormat='{0:dd MMMM}', Converter={StaticResource FileLastChangedConverter}}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}" />
+                    <Label
+                        HorizontalTextAlignment="Center"
+                        IsVisible="{Binding DisplayItem, Converter={StaticResource FileSizeIsVisibleConverter}}"
+                        Text="."
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalTextAlignment="Center" />
+                    <Label
+                        IsVisible="{Binding DisplayItem, Converter={StaticResource FileSizeIsVisibleConverter}}"
+                        Text="{Binding DisplayItem, Converter={StaticResource FileSizeConverter}}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}" />
+                </HorizontalStackLayout>
+
+                <Ellipse
+                    Grid.RowSpan="2"
+                    Grid.Column="2"
+                    Margin="10"
+                    Fill="{AppThemeBinding Light={StaticResource White},
+                                           Dark={StaticResource Black}}"
+                    HeightRequest="40"
+                    VerticalOptions="Center"
+                    WidthRequest="40" />
+            </Grid>
             <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-            <BoxView
-                HeightRequest="120"
-                WidthRequest="120"
-                Color="Salmon" />
-        </VerticalStackLayout>
-    </ScrollView>
+                Grid.Row="1"
+                Margin="-16,0"
+                HeightRequest="1"
+                Color="{StaticResource Gray200}" />
+        </Grid>
+
+        <ScrollView Grid.Row="1" Padding="16,0">
+            <VerticalStackLayout Spacing="0">
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.ArrowUpFromBracket}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Share"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.Trash}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Delete"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.Download}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Make Available Offline"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.Folder}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Move"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.CircleInfo}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Details"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.ICursor}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Rename this file"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+
+                <Grid ColumnDefinitions="40, *" RowDefinitions="Auto, 1">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.Source>
+                            <FontImageSource
+                                FontFamily="{x:Static fonts:FontConstants.FontAwesomeSolid}"
+                                Glyph="{x:Static fonts:FontAwesomeIcons.ArrowUpRightFromSquare}"
+                                Size="20"
+                                Color="{StaticResource Gray300}" />
+                        </Image.Source>
+                    </Image>
+
+                    <Button
+                        Grid.Column="1"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="Start"
+                        Text="Open in another app"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray500},
+                                                    Dark={StaticResource Gray300}}"
+                        VerticalOptions="Fill" />
+
+                    <BoxView
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="0,0,-16,0"
+                        HeightRequest="1"
+                        Color="{StaticResource Gray200}" />
+                </Grid>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+
 </the49:BottomSheet>
